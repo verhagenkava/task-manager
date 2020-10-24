@@ -24,6 +24,7 @@ def sign_up():
     except Exception as e:
         return jsonify(statusCode=500, message=str(e))
 
+
 @app.route('/login', methods=['POST'])
 def login():
 
@@ -37,9 +38,10 @@ def login():
                     return jsonify(statusCode=500, message='Senha incorreta')
             else:
                 return jsonify(statusCode=500, message='Usuário não identificado.')
-        
+
     except Exception as e:
         return jsonify(statusCode=500, message=str(e))
+
 
 @app.route('/add', methods=['POST'])
 def add_task():
@@ -47,9 +49,18 @@ def add_task():
     try:
         data = json.loads(request.data)
         tasks.append(data)
-        print(tasks)
         return jsonify(statusCode=200, message='Tarefa salva com sucesso.')
-        
+
+    except Exception as e:
+        return jsonify(statusCode=500, message=str(e))
+
+
+@app.route('/tasks', methods=['GET'])
+def get_tasks():
+
+    try:
+        return jsonify(statusCode=200, tasks=tasks)
+
     except Exception as e:
         return jsonify(statusCode=500, message=str(e))
 
