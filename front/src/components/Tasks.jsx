@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Container,
@@ -65,6 +65,20 @@ export default function Tasks() {
   function handleListItemClick(event, index) {
     setSelectedIndex(index);
   }
+
+  useEffect(() => {
+        const request = {
+          method: "GET",
+          headers: {
+            content_type: "application/json",
+          },
+        };
+        fetch("http://localhost:5000/tasks", request)
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+          });
+  });
 
   return (
     <div className={classes.root}>
