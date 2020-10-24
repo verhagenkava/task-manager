@@ -66,7 +66,7 @@ export default function LoginForm() {
         setShowAlert(true);
         setStatusCode(data.statusCode);
         setMessage(data.message);
-        history.push("/");
+
       });
   }
 
