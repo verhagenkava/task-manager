@@ -9,6 +9,12 @@ import IconButton from "@material-ui/core/IconButton";
 import CloseIcon from "@material-ui/icons/Close";
 import Typography from "@material-ui/core/Typography";
 import { TextField } from "@material-ui/core";
+import ptLocale from "date-fns/locale/pt";
+import DateFnsUtils from "@date-io/date-fns";
+import {
+  KeyboardDatePicker,
+  MuiPickersUtilsProvider,
+} from "@material-ui/pickers";
 
 const styles = (theme) => ({
   root: {
@@ -59,14 +65,16 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       backgroundColor: "#E3431B",
     },
-    task: {
-      width: "100%",
-    },
+  },
+  datePicker: {
+    marginTop: "15px",
   },
 }));
 
 export default function CustomizedDialogs({ open, handleClose }) {
   const classes = useStyles();
+  const [task, setTask] = useState("");
+  const [selectedDate, handleDateChange] = useState(new Date());
 
   return (
     <div>
@@ -88,7 +96,19 @@ export default function CustomizedDialogs({ open, handleClose }) {
             rows={2}
             variant="outlined"
             placeholder="Por exemplo: Reunião do Trabalho segunda às 09:00"
+            value={task}
+            onChange={(event) => {
+                setTask(event.target.value);
+              }}
           />
+          <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
+            <KeyboardDatePicker
+              className={classes.datePicker}
+              value={selectedDate}
+              onChange={(date) => handleDateChange(date)}
+              format="dd/MM/yyyy"
+            />
+          </MuiPickersUtilsProvider>
         </DialogContent>
         <DialogActions>
           <Button className={classes.addButton} onClick={handleClose}>
