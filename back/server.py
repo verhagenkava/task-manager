@@ -11,6 +11,7 @@ app.config["DEBUG"] = True
 CORS(app)
 
 users = []
+tasks = []
 
 
 @app.route('/signup', methods=['POST'])
@@ -31,11 +32,23 @@ def login():
         for user in users:
             if (user['email'] == data['email']):
                 if (user['password'] == data['password']):
-                    return jsonify(statusCode=200, message='User found in database.')
+                    return jsonify(statusCode=200, message='Usuário não identificado.')
                 else:
-                    return jsonify(statusCode=500, message='Wrong password.')
+                    return jsonify(statusCode=500, message='Senha incorreta')
             else:
-                return jsonify(statusCode=500, message='User not identified.')
+                return jsonify(statusCode=500, message='Usuário não identificado.')
+        
+    except Exception as e:
+        return jsonify(statusCode=500, message=str(e))
+
+@app.route('/add', methods=['POST'])
+def add_task():
+
+    try:
+        data = json.loads(request.data)
+        tasks.append(data)
+        print(tasks)
+        return jsonify(statusCode=200, message='Tarefa salva com sucesso.')
         
     except Exception as e:
         return jsonify(statusCode=500, message=str(e))

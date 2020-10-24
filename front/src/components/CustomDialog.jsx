@@ -76,6 +76,33 @@ export default function CustomizedDialogs({ open, handleClose }) {
   const [task, setTask] = useState("");
   const [selectedDate, handleDateChange] = useState(new Date());
 
+  function handleSaveTask() {
+    const formatedDate = `${
+      selectedDate.getDate() +
+      "/" +
+      (selectedDate.getMonth() + 1) +
+      "/" +
+      selectedDate.getFullYear()
+    }`;
+    const request = {
+      method: "POST",
+      headers: {
+        content_type: "application/json",
+      },
+      body: JSON.stringify({
+        task: task,
+        date: formatedDate,
+      }),
+    };
+    fetch("http://localhost:5000/add", request)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        setTask("");
+        handleClose();
+      });
+  }
+
   return (
     <div>
       <Dialog
@@ -98,8 +125,8 @@ export default function CustomizedDialogs({ open, handleClose }) {
             placeholder="Por exemplo: Reunião do Trabalho segunda às 09:00"
             value={task}
             onChange={(event) => {
-                setTask(event.target.value);
-              }}
+              setTask(event.target.value);
+            }}
           />
           <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ptLocale}>
             <KeyboardDatePicker
@@ -107,11 +134,12 @@ export default function CustomizedDialogs({ open, handleClose }) {
               value={selectedDate}
               onChange={(date) => handleDateChange(date)}
               format="dd/MM/yyyy"
+              invalidDateMessage="Data inválida"
             />
           </MuiPickersUtilsProvider>
         </DialogContent>
         <DialogActions>
-          <Button className={classes.addButton} onClick={handleClose}>
+          <Button className={classes.addButton} onClick={handleSaveTask}>
             Adicionar
           </Button>
           <Button onClick={handleClose}>Cancelar</Button>

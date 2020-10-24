@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Tasks() {
   const classes = useStyles();
   const [open, setOpen] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState(0);
 
   function handleClickOpen() {
     setOpen(true);
@@ -61,25 +62,41 @@ export default function Tasks() {
     setOpen(false);
   }
 
+  function handleListItemClick(event, index) {
+    setSelectedIndex(index);
+  }
+
   return (
     <div className={classes.root}>
       <Container maxWidth={false}>
         <Grid container>
           <Grid item xs={3}>
             <List component="nav" className={classes.list}>
-              <ListItem button>
+              <ListItem
+                button
+                selected={selectedIndex === 0}
+                onClick={(event) => handleListItemClick(event, 0)}
+              >
                 <ListItemIcon>
                   <AllInboxIcon />
                 </ListItemIcon>
                 <ListItemText primary="Todas" />
               </ListItem>
-              <ListItem button>
+              <ListItem
+                button
+                selected={selectedIndex === 1}
+                onClick={(event) => handleListItemClick(event, 1)}
+              >
                 <ListItemIcon>
                   <TodayIcon />
                 </ListItemIcon>
                 <ListItemText primary="Hoje" />
               </ListItem>
-              <ListItem button>
+              <ListItem
+                button
+                selected={selectedIndex === 2}
+                onClick={(event) => handleListItemClick(event, 2)}
+              >
                 <ListItemIcon>
                   <DateRangeIcon />
                 </ListItemIcon>
