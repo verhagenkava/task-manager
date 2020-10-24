@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useHistory } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   TextField,
@@ -38,6 +39,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoginForm() {
   const classes = useStyles();
+  let history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [emailValidation, setEmailValidation] = useState(true);
@@ -60,30 +62,29 @@ export default function LoginForm() {
     fetch("http://localhost:5000/login", request)
       .then((response) => response.json())
       .then((data) => {
-        //history.push("/");
-        console.log(data);
+        history.push("/tasks");
       });
   }
 
   function handleEmailValidation() {
     setEmailValidation(true);
-    if (email != "" && email.includes("@")){
+    if (email != "" && email.includes("@")) {
       setEmailValidation(true);
     } else {
       setEmailValidation(false);
       setEmailHelperText("Insira um email válido.");
     }
-  };
+  }
 
   function handlePasswordValidation() {
     setPasswordValidation(true);
-    if (password != ""){
+    if (password != "") {
       setPasswordValidation(true);
     } else {
       setPasswordValidation(false);
       setPasswordHelperText("Insira uma senha.");
     }
-  };
+  }
 
   return (
     <div className={classes.root}>
