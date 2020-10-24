@@ -40,6 +40,10 @@ export default function LoginForm() {
   const classes = useStyles();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [emailValidation, setEmailValidation] = useState(true);
+  const [passwordValidation, setPasswordValidation] = useState(true);
+  const [emailHelperText, setEmailHelperText] = useState("");
+  const [passwordHelperText, setPasswordHelperText] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -61,6 +65,26 @@ export default function LoginForm() {
       });
   }
 
+  function handleEmailValidation() {
+    setEmailValidation(true);
+    if (email != "" && email.includes("@")){
+      setEmailValidation(true);
+    } else {
+      setEmailValidation(false);
+      setEmailHelperText("Insira um email válido.");
+    }
+  };
+
+  function handlePasswordValidation() {
+    setPasswordValidation(true);
+    if (password != ""){
+      setPasswordValidation(true);
+    } else {
+      setPasswordValidation(false);
+      setPasswordHelperText("Insira uma senha.");
+    }
+  };
+
   return (
     <div className={classes.root}>
       <Container maxWidth={false}>
@@ -80,7 +104,9 @@ export default function LoginForm() {
                 id="email"
                 name="email"
                 label="Email"
-                type="email"
+                onBlur={handleEmailValidation}
+                error={!emailValidation}
+                helperText={emailHelperText}
                 required
                 variant="outlined"
                 margin="normal"
@@ -93,9 +119,9 @@ export default function LoginForm() {
                 onChange={(event) => {
                   setPassword(event.target.value);
                 }}
-                //onBlur={validarCampos}
-                //error={!erros.password.valido}
-                //helperText={erros.password.texto}
+                onBlur={handlePasswordValidation}
+                error={!passwordValidation}
+                helperText={passwordHelperText}
                 id="password"
                 name="password"
                 label="Senha"
