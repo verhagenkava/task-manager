@@ -7,6 +7,8 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
+import { useHistory } from "react-router-dom";
+import CustomAlert from "./CustomAlert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,8 +40,13 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoginForm() {
   const classes = useStyles();
+  let history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [statusCode, setStatusCode] = useState();
+  const [message, setMessage] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
@@ -53,11 +60,13 @@ export default function LoginForm() {
         password: password,
       }),
     };
-    fetch("http://localhost:5000/login", request)
+    fetch("http://localhost:5000/signup", request)
       .then((response) => response.json())
       .then((data) => {
-        //history.push("/");
-        console.log(data);
+        setShowAlert(true);
+        setStatusCode(data.statusCode);
+        setMessage(data.message);
+        history.push("/");
       });
   }
 
@@ -68,7 +77,7 @@ export default function LoginForm() {
           <Grid item xs={4} />
           <Grid item xs={4}>
             <Typography className={classes.typography} variant="h5">
-              Faça seu login!
+              Realize seu cadastro!
             </Typography>
             <form onSubmit={(event) => handleSubmit(event)}>
               <TextField
@@ -105,17 +114,40 @@ export default function LoginForm() {
                 margin="normal"
                 fullWidth
               />
+              <TextField
+                className={classes.textField}
+                value={confirmPassword}
+                onChange={(event) => {
+                  setConfirmPassword(event.target.value);
+                }}
+                //onBlur={validarCampos}
+                //error={!erros.password.valido}
+                //helperText={erros.password.texto}
+                id="confirmPassword"
+                name="confirmPassword"
+                label="Confirme sua senha"
+                type="password"
+                required
+                variant="outlined"
+                margin="normal"
+                fullWidth
+              />
               <Button
                 variant="contained"
                 className={classes.loginButton}
                 type="submit"
               >
-                Login
+                Cadastrar
               </Button>
             </form>
           </Grid>
           <Grid item xs={4} />
         </Grid>
+        {showAlert ? (
+        <CustomAlert statusCode={statusCode} message={message} />
+      ) : (
+        <></>
+      )}
       </Container>
     </div>
   );

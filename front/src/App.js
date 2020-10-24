@@ -1,14 +1,14 @@
 import React from "react";
 import "fontsource-roboto";
 import ButtonAppBar from "./components/ButtonAppBar";
-import LoginForm from "./components/LoginForm";
 import Container from "@material-ui/core/Container";
+import Routes from "./Routes";
 
 function App() {
   return (
-    <Container maxWidth="false" disableGutters>
+    <Container maxWidth={false} disableGutters>
       <ButtonAppBar />
-      <LoginForm />
+      <Routes />
     </Container>
   );
 }

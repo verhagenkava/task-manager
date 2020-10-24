@@ -7,6 +7,8 @@ import Button from "@material-ui/core/Button";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import CheckCircleIcon from "@material-ui/icons/CheckCircle";
+import Link from "@material-ui/core/Link";
+import { useHistory, Link as RouterLink, useLocation } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -24,12 +26,22 @@ const useStyles = makeStyles((theme) => ({
   checkCircleIcon: {
     display: "inline-block",
     verticalAlign: "middle",
-    color: "#E86240"
+    color: "#E86240",
   },
 }));
 
 export default function ButtonAppBar() {
   const classes = useStyles();
+  let history = useHistory();
+  let location = useLocation();
+
+  function handleButton() {
+    if (location.pathname === "/") {
+      history.push("/signup");
+    } else {
+      history.push("/");
+    }
+  }
 
   return (
     <div className={classes.root}>
@@ -44,10 +56,19 @@ export default function ButtonAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h5" className={classes.title}>
-            Task Manager
-            <CheckCircleIcon className={classes.checkCircleIcon} />
+            <Link
+              component={RouterLink}
+              to="/"
+              color="inherit"
+              underline="none"
+            >
+              Task Manager
+              <CheckCircleIcon className={classes.checkCircleIcon} />
+            </Link>
           </Typography>
-          <Button color="inherit">Cadastro</Button>
+          <Button color="inherit" onClick={handleButton}>
+            {location.pathname === "/" ? "Cadastro" : "Entrar"}
+          </Button>
         </Toolbar>
       </AppBar>
     </div>
