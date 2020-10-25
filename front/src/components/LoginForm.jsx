@@ -68,7 +68,7 @@ export default function LoginForm() {
 
   function handleEmailValidation() {
     setEmailValidation(true);
-    if (email != "" && email.includes("@")) {
+    if (email !== "" && email.includes("@")) {
       setEmailValidation(true);
     } else {
       setEmailValidation(false);
@@ -78,7 +78,7 @@ export default function LoginForm() {
 
   function handlePasswordValidation() {
     setPasswordValidation(true);
-    if (password != "") {
+    if (password !== "") {
       setPasswordValidation(true);
     } else {
       setPasswordValidation(false);

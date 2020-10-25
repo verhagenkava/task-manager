@@ -7,7 +7,6 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
-import { useHistory } from "react-router-dom";
 import CustomAlert from "./CustomAlert";
 
 const useStyles = makeStyles((theme) => ({
@@ -40,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 
 export default function LoginForm() {
   const classes = useStyles();
-  let history = useHistory();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -72,13 +70,12 @@ export default function LoginForm() {
         setShowAlert(true);
         setStatusCode(data.statusCode);
         setMessage(data.message);
-
       });
   }
 
   function handleEmailValidation() {
     setEmailValidation(true);
-    if (email != "" && email.includes("@")){
+    if (email !== "" && email.includes("@")){
       setEmailValidation(true);
     } else {
       setEmailValidation(false);
@@ -88,7 +85,7 @@ export default function LoginForm() {
 
   function handlePasswordValidation() {
     setPasswordValidation(true);
-    if (password != ""){
+    if (password !== ""){
       setPasswordValidation(true);
     } else {
       setPasswordValidation(false);
@@ -98,7 +95,7 @@ export default function LoginForm() {
 
   function handleConfirmPasswordValidation() {
     setConfirmPasswordValidation(true);
-    if (confirmPassword != ""){
+    if (confirmPassword !== ""){
       if (password === confirmPassword) {
         setConfirmPasswordValidation(true);
       } else {

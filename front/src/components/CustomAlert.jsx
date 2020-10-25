@@ -29,7 +29,7 @@ export default function CustomAlert({ statusCode, message }) {
   return (
     <div className={classes.root}>
       <Snackbar open={open} autoHideDuration={2000} onClose={handleClose}>
-        {statusCode == 200 ? (
+        {statusCode === 200 ? (
           <Alert variant="filled" onClose={handleClose} severity="success">
             {message}
           </Alert>
