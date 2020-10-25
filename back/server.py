@@ -38,11 +38,11 @@ def login():
                     if (user['password'] == data['password']):
                         return jsonify(statusCode=200, message='Usuário identificado.')
                     else:
-                        return jsonify(statusCode=200, message='Senha incorreta')
+                        return jsonify(statusCode=404, message='Senha incorreta')
                 else:
-                    return jsonify(statusCode=200, message='Usuário não identificado.')
+                    return jsonify(statusCode=404, message='Usuário não identificado.')
         else:
-            return jsonify(statusCode=200, message='Usuário não identificado.')
+            return jsonify(statusCode=404, message='Usuário não identificado.')
 
     except Exception as e:
         return jsonify(statusCode=500, message=str(e))

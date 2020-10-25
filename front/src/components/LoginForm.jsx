@@ -8,6 +8,7 @@ import {
   Typography,
   Button,
 } from "@material-ui/core";
+import CustomAlert from "./CustomAlert";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -36,9 +37,13 @@ export default function LoginForm() {
   const [passwordValidation, setPasswordValidation] = useState(true);
   const [emailHelperText, setEmailHelperText] = useState("");
   const [passwordHelperText, setPasswordHelperText] = useState("");
+  const [showAlert, setShowAlert] = useState(false);
+  const [statusCode, setStatusCode] = useState();
+  const [message, setMessage] = useState("");
 
   function handleSubmit(event) {
     event.preventDefault();
+    setShowAlert(false);
     const request = {
       method: "POST",
       headers: {
@@ -52,9 +57,13 @@ export default function LoginForm() {
     fetch("http://localhost:5000/login", request)
       .then((response) => response.json())
       .then((data) => {
-        if (data.message === "Usuário identificado."){
+        if (data.message === "Usuário identificado.") {
           history.push("/tasks");
-        } 
+        } else {
+          setShowAlert(true);
+          setStatusCode(data.statusCode);
+          setMessage(data.message);
+        }
       });
   }
 
@@ -133,6 +142,11 @@ export default function LoginForm() {
           </Grid>
           <Grid item xs={4} />
         </Grid>
+        {showAlert ? (
+          <CustomAlert statusCode={statusCode} message={message} />
+        ) : (
+          <></>
+        )}
       </Container>
     </div>
   );
