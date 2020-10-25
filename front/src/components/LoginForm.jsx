@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function LoginForm() {
+export default function LoginForm({ handleLogin }) {
   const classes = useStyles();
   let history = useHistory();
   const [email, setEmail] = useState("");
@@ -58,6 +58,7 @@ export default function LoginForm() {
       .then((response) => response.json())
       .then((data) => {
         if (data.message === "Usuário identificado.") {
+          handleLogin();
           history.push("/tasks");
         } else {
           setShowAlert(true);

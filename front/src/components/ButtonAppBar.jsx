@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function ButtonAppBar() {
+export default function ButtonAppBar({ handleLogout }) {
   const classes = useStyles();
   let history = useHistory();
   let location = useLocation();
@@ -36,10 +36,6 @@ export default function ButtonAppBar() {
     } else {
       history.push("/");
     }
-  }
-
-  function handleLogOut() {
-    history.push("/");
   }
 
   return (
@@ -58,7 +54,7 @@ export default function ButtonAppBar() {
             </Link>
           </Typography>
           {location.pathname === "/tasks" ? (
-            <Button color="inherit" onClick={handleLogOut}>
+            <Button color="inherit" onClick={handleLogout}>
               Sair
             </Button>
           ) : (
