@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function Tasks() {
   const classes = useStyles();
+  const [tasks, setTasks] = useState([]);
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -71,17 +72,21 @@ export default function Tasks() {
 
   useEffect(() => {
     const request = {
-      method: "GET",
+      method: "POST",
       headers: {
         content_type: "application/json",
       },
+      body: JSON.stringify({
+        index: selectedIndex,
+      }),
     };
     fetch("http://localhost:5000/tasks", request)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
+        console.log(data.tasks);
+        setTasks(data.tasks);
       });
-  });
+  },[selectedIndex, open]);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -136,27 +141,28 @@ export default function Tasks() {
               {selectedCategory[selectedIndex]}
             </Typography>
             <List>
-              {[0, 1, 2, 3].map((value) => {
-                const labelId = `checkbox-list-label-${value}`;
+              {tasks.map((res) => {
+                //const labelId = `checkbox-list-label-${value}`;
 
                 return (
                   <ListItem
-                    key={value}
+                    //key={value}
                     button
-                    onClick={handleToggle(value)}
+                    //onClick={handleToggle(value)}
                   >
                     <ListItemIcon>
                       <Checkbox
                         edge="start"
-                        checked={checked.indexOf(value) !== -1}
+                        //checked={checked.indexOf(value) !== -1}
                         tabIndex={-1}
                         disableRipple
-                        inputProps={{ "aria-labelledby": labelId }}
+                        //inputProps={{ "aria-labelledby": labelId }}
                       />
                     </ListItemIcon>
                     <ListItemText
-                      id={labelId}
-                      primary={`Tarefa ${value + 1}`}
+                      //id={labelId}
+                      //primary={`Tarefa ${value + 1}`}
+                      primary={res.task}
                     />
                     <ListItemSecondaryAction>
                       <IconButton edge="end" aria-label="edit">

@@ -5,6 +5,8 @@ from flask import jsonify
 from flask import request
 from flask_cors import CORS
 import json
+from datetime import date
+from datetime import timedelta
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -55,11 +57,32 @@ def add_task():
         return jsonify(statusCode=500, message=str(e))
 
 
-@app.route('/tasks', methods=['GET'])
+@app.route('/tasks', methods=['POST'])
 def get_tasks():
 
     try:
-        return jsonify(statusCode=200, tasks=tasks)
+        filtered_tasks = []
+        data = json.loads(request.data)
+        print(data['index'])
+
+        if (data['index'] == 0):
+            return jsonify(statusCode=200, tasks=tasks)
+        else:
+            date_now = date.today()
+            delta = timedelta(weeks=1)
+            date_then = date_now + delta
+
+            for task in tasks:
+
+                split_task_date = task['date'].split('/', 2)
+                task_date = date(int(split_task_date[2]), int(split_task_date[1]), int(split_task_date[0]))
+                
+                if (data['index'] == 1 and task_date == date_now):
+                    filtered_tasks.append(task)
+                elif (data['index'] == 2 and task_date >= date_now and task_date <= date_then):
+                    filtered_tasks.append(task)
+        
+            return jsonify(statusCode=200, tasks=filtered_tasks)
 
     except Exception as e:
         return jsonify(statusCode=500, message=str(e))

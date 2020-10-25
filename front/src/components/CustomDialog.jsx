@@ -99,6 +99,7 @@ export default function CustomizedDialogs({ open, handleClose }) {
       .then((data) => {
         console.log(data);
         setTask("");
+        handleDateChange(new Date());
         handleClose();
       });
   }
