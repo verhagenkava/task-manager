@@ -38,6 +38,10 @@ export default function ButtonAppBar() {
     }
   }
 
+  function handleLogOut() {
+    history.push("/");
+  }
+
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="static">
@@ -54,7 +58,9 @@ export default function ButtonAppBar() {
             </Link>
           </Typography>
           {location.pathname === "/tasks" ? (
-            <></>
+            <Button color="inherit" onClick={handleLogOut}>
+              Sair
+            </Button>
           ) : (
             <Button color="inherit" onClick={handleButton}>
               {location.pathname === "/" ? "Cadastro" : "Entrar"}

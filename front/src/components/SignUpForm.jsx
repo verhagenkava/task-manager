@@ -16,16 +16,6 @@ const useStyles = makeStyles((theme) => ({
   typography: {
     marginTop: "50px",
   },
-  textField: {
-    "& label.Mui-focused": {
-      color: "#E86240",
-    },
-    "& .MuiOutlinedInput-root": {
-      "&.Mui-focused fieldset": {
-        borderColor: "#E86240",
-      },
-    },
-  },
   loginButton: {
     color: "white",
     backgroundColor: "#E86240",
@@ -119,7 +109,6 @@ export default function LoginForm() {
             </Typography>
             <form onSubmit={(event) => handleSubmit(event)}>
               <TextField
-                className={classes.textField}
                 value={email}
                 onChange={(event) => {
                   setEmail(event.target.value);
@@ -137,7 +126,6 @@ export default function LoginForm() {
               />
 
               <TextField
-                className={classes.textField}
                 value={password}
                 onChange={(event) => {
                   setPassword(event.target.value);
@@ -155,7 +143,6 @@ export default function LoginForm() {
                 fullWidth
               />
               <TextField
-                className={classes.textField}
                 value={confirmPassword}
                 onChange={(event) => {
                   setConfirmPassword(event.target.value);

@@ -68,7 +68,7 @@ export default function Tasks() {
   const [checked, setChecked] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [closedDialog, setClosedDialog] = useState(false);
-  const selectedCategory = ["Todas", "Hoje", "Próxima semana"];
+  const selectedCategory = ["Todas as tarefas", "Hoje", "Próxima semana"];
 
   function handleClickOpen() {
     setOpen(true);

@@ -32,14 +32,17 @@ def login():
 
     try:
         data = json.loads(request.data)
-        for user in users:
-            if (user['email'] == data['email']):
-                if (user['password'] == data['password']):
-                    return jsonify(statusCode=200, message='Usuário não identificado.')
+        if (users != []):
+            for user in users:
+                if (user['email'] == data['email']):
+                    if (user['password'] == data['password']):
+                        return jsonify(statusCode=200, message='Usuário identificado.')
+                    else:
+                        return jsonify(statusCode=200, message='Senha incorreta')
                 else:
-                    return jsonify(statusCode=500, message='Senha incorreta')
-            else:
-                return jsonify(statusCode=500, message='Usuário não identificado.')
+                    return jsonify(statusCode=200, message='Usuário não identificado.')
+        else:
+            return jsonify(statusCode=200, message='Usuário não identificado.')
 
     except Exception as e:
         return jsonify(statusCode=500, message=str(e))
