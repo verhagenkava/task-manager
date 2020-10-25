@@ -21,6 +21,7 @@ import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
 import CustomDialog from "./CustomDialog";
+import DeleteDialog from "./DeleteDialog";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -62,13 +63,15 @@ export default function Tasks() {
   const classes = useStyles();
   const [tasks, setTasks] = useState([]);
   const [taskId, setTaskId] = useState(1);
+  const [deletingTaskId, setDeletingTaskId] = useState();
   const [task, setTask] = useState();
   const [isEditing, setIsEditing] = useState(false);
   const [open, setOpen] = useState(false);
+  const [openDelete, setOpenDelete] = useState(false);
   const [checked, setChecked] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [closedDialog, setClosedDialog] = useState(false);
-  const selectedCategory = ["Todas as tarefas", "Hoje", "Próxima semana"];
+  const selectedCategory = ["Todas as Tarefas", "Tarefas de Hoje", "Tarefas da Próxima Semana"];
 
   function handleClickOpen() {
     setOpen(true);
@@ -77,6 +80,15 @@ export default function Tasks() {
   function handleClose() {
     setOpen(false);
     setIsEditing(false);
+    if (closedDialog === false) {
+      setClosedDialog(true);
+    } else {
+      setClosedDialog(false);
+    }
+  }
+
+  function handleDeleteClose() {
+    setOpenDelete(false);
     if (closedDialog === false) {
       setClosedDialog(true);
     } else {
@@ -123,6 +135,11 @@ export default function Tasks() {
           setChecked(false);
         }
       });
+  }
+
+  function handleDeleteConfirmation(id) {
+    setOpenDelete(true);
+    setDeletingTaskId(id);
   }
 
   function handleEdit(task) {
@@ -202,7 +219,7 @@ export default function Tasks() {
                         <EditIcon />
                       </IconButton>
                       <IconButton
-                        onClick={() => handleDelete(res.taskId)}
+                        onClick={() => handleDeleteConfirmation(res.taskId)}
                         edge="end"
                         aria-label="delete"
                       >
@@ -231,6 +248,11 @@ export default function Tasks() {
           taskId={taskId}
           isEditing={isEditing}
           editingTask={task}
+        />
+        <DeleteDialog
+          open={openDelete}
+          handleClose={handleDeleteClose}
+          deletingTaskId={deletingTaskId}
         />
       </Container>
     </div>

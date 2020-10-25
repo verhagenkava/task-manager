@@ -191,6 +191,7 @@ export default function CustomizedDialogs({
           <Button
             className={classes.addButton}
             onClick={isEditing ? handleUpdateTask : handleSaveTask}
+            autofocus
           >
             Adicionar
           </Button>
