@@ -74,14 +74,36 @@ def get_tasks():
             for task in tasks:
 
                 split_task_date = task['date'].split('/', 2)
-                task_date = date(int(split_task_date[2]), int(split_task_date[1]), int(split_task_date[0]))
-                
+                task_date = date(int(split_task_date[2]), int(
+                    split_task_date[1]), int(split_task_date[0]))
+
                 if (data['index'] == 1 and task_date == date_now):
                     filtered_tasks.append(task)
                 elif (data['index'] == 2 and task_date >= date_now and task_date <= date_then):
                     filtered_tasks.append(task)
-        
+
             return jsonify(statusCode=200, tasks=filtered_tasks)
+
+    except Exception as e:
+        return jsonify(statusCode=500, message=str(e))
+
+
+@app.route('/task/<id>', methods=['DELETE'])
+def delete_task(id):
+
+    try:
+        print(id)
+        for task in tasks:
+
+            print(task['taskId'])
+
+            if (int(task['taskId']) == int(id)):
+                value = task
+                print(value)
+                break
+        
+        tasks.remove(value)
+        return jsonify(statusCode=200, message='Tarefa removida com sucesso.')
 
     except Exception as e:
         return jsonify(statusCode=500, message=str(e))

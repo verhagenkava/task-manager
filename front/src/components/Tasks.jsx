@@ -11,14 +11,15 @@ import {
   Typography,
   ListItemSecondaryAction,
   Checkbox,
-  IconButton
+  IconButton,
+  Chip,
 } from "@material-ui/core";
 import AllInboxIcon from "@material-ui/icons/AllInbox";
 import TodayIcon from "@material-ui/icons/Today";
 import DateRangeIcon from "@material-ui/icons/DateRange";
 import AddIcon from "@material-ui/icons/Add";
-import EditIcon from '@material-ui/icons/Edit';
-import DeleteIcon from '@material-ui/icons/Delete';
+import EditIcon from "@material-ui/icons/Edit";
+import DeleteIcon from "@material-ui/icons/Delete";
 import CustomDialog from "./CustomDialog";
 
 const useStyles = makeStyles((theme) => ({
@@ -48,6 +49,13 @@ const useStyles = makeStyles((theme) => ({
     marginTop: "20px",
     marginLeft: "10px",
   },
+  chip: {
+    backgroundColor: "#E86240",
+    color: "white",
+  },
+  checkedIcon: {
+    backgroundColor: "#E86240",
+  }
 }));
 
 export default function Tasks() {
@@ -55,7 +63,7 @@ export default function Tasks() {
   const [tasks, setTasks] = useState([]);
   const [taskId, setTaskId] = useState(1);
   const [open, setOpen] = useState(false);
-  const [checked, setChecked] = useState([]);
+  const [checked, setChecked] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const selectedCategory = ["Todas", "Hoje", "Próxima semana"];
 
@@ -88,19 +96,25 @@ export default function Tasks() {
         setTasks(data.tasks);
         setTaskId(data.tasks.length + 1);
       });
-  },[selectedIndex, open]);
+  }, [selectedIndex, open, checked]);
 
-  const handleToggle = (value) => () => {
-    const currentIndex = checked.indexOf(value);
-    const newChecked = [...checked];
-
-    if (currentIndex === -1) {
-      newChecked.push(value);
-    } else {
-      newChecked.splice(currentIndex, 1);
-    }
-
-    setChecked(newChecked);
+  function handleToggle(id) {
+    const request = {
+      method: "DELETE",
+      headers: {
+        content_type: "application/json",
+      },
+    };
+    fetch(`http://localhost:5000/task/${id}`, request)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        if (checked === false) {
+          setChecked(true);
+        } else {
+          setChecked(false);
+        }
+      });
   };
 
   return (
@@ -150,22 +164,20 @@ export default function Tasks() {
                   <ListItem
                     key={res.taskId}
                     button
-                    onClick={handleToggle(res.taskId)}
+                    onClick={() => handleToggle(res.taskId)}
                   >
                     <ListItemIcon>
                       <Checkbox
+                        color="inherit"
                         edge="start"
-                        checked={checked.indexOf(res.taskId) !== -1}
                         tabIndex={-1}
                         disableRipple
                         inputProps={{ "aria-labelledby": labelId }}
                       />
                     </ListItemIcon>
-                    <ListItemText
-                      id={labelId}
-                      primary={res.task}
-                    />
+                    <ListItemText id={labelId} primary={res.task} />
                     <ListItemSecondaryAction>
+                      <Chip className={classes.chip} label={res.date} />
                       <IconButton edge="end" aria-label="edit">
                         <EditIcon />
                       </IconButton>
