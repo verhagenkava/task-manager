@@ -63,7 +63,6 @@ def get_tasks():
     try:
         filtered_tasks = []
         data = json.loads(request.data)
-        print(data['index'])
 
         if (data['index'] == 0):
             return jsonify(statusCode=200, tasks=tasks)

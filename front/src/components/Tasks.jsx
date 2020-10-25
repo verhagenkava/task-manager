@@ -53,6 +53,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Tasks() {
   const classes = useStyles();
   const [tasks, setTasks] = useState([]);
+  const [taskId, setTaskId] = useState(1);
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
@@ -85,6 +86,7 @@ export default function Tasks() {
       .then((data) => {
         console.log(data.tasks);
         setTasks(data.tasks);
+        setTaskId(data.tasks.length + 1);
       });
   },[selectedIndex, open]);
 
@@ -142,26 +144,25 @@ export default function Tasks() {
             </Typography>
             <List>
               {tasks.map((res) => {
-                //const labelId = `checkbox-list-label-${value}`;
+                const labelId = `checkbox-list-label-${res.taskId}`;
 
                 return (
                   <ListItem
-                    //key={value}
+                    key={res.taskId}
                     button
-                    //onClick={handleToggle(value)}
+                    onClick={handleToggle(res.taskId)}
                   >
                     <ListItemIcon>
                       <Checkbox
                         edge="start"
-                        //checked={checked.indexOf(value) !== -1}
+                        checked={checked.indexOf(res.taskId) !== -1}
                         tabIndex={-1}
                         disableRipple
-                        //inputProps={{ "aria-labelledby": labelId }}
+                        inputProps={{ "aria-labelledby": labelId }}
                       />
                     </ListItemIcon>
                     <ListItemText
-                      //id={labelId}
-                      //primary={`Tarefa ${value + 1}`}
+                      id={labelId}
                       primary={res.task}
                     />
                     <ListItemSecondaryAction>
@@ -188,7 +189,7 @@ export default function Tasks() {
             </Fab>
           </Grid>
         </Grid>
-        <CustomDialog open={open} handleClose={handleClose} />
+        <CustomDialog open={open} handleClose={handleClose} taskId={taskId} />
       </Container>
     </div>
   );

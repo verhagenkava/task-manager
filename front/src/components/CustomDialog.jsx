@@ -71,7 +71,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomizedDialogs({ open, handleClose }) {
+export default function CustomizedDialogs({ open, handleClose, taskId }) {
   const classes = useStyles();
   const [task, setTask] = useState("");
   const [selectedDate, handleDateChange] = useState(new Date());
@@ -90,6 +90,7 @@ export default function CustomizedDialogs({ open, handleClose }) {
         content_type: "application/json",
       },
       body: JSON.stringify({
+        taskId: taskId,
         task: task,
         date: formatedDate,
       }),
@@ -97,7 +98,6 @@ export default function CustomizedDialogs({ open, handleClose }) {
     fetch("http://localhost:5000/add", request)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         setTask("");
         handleDateChange(new Date());
         handleClose();
