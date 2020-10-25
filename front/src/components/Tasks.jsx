@@ -55,16 +55,19 @@ const useStyles = makeStyles((theme) => ({
   },
   checkedIcon: {
     backgroundColor: "#E86240",
-  }
+  },
 }));
 
 export default function Tasks() {
   const classes = useStyles();
   const [tasks, setTasks] = useState([]);
   const [taskId, setTaskId] = useState(1);
+  const [task, setTask] = useState();
+  const [isEditing, setIsEditing] = useState(false);
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
+  const [closedDialog, setClosedDialog] = useState(false);
   const selectedCategory = ["Todas", "Hoje", "Próxima semana"];
 
   function handleClickOpen() {
@@ -73,6 +76,12 @@ export default function Tasks() {
 
   function handleClose() {
     setOpen(false);
+    setIsEditing(false);
+    if (closedDialog === false) {
+      setClosedDialog(true);
+    } else {
+      setClosedDialog(false);
+    }
   }
 
   function handleListItemClick(event, index) {
@@ -92,13 +101,12 @@ export default function Tasks() {
     fetch("http://localhost:5000/tasks", request)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data.tasks);
         setTasks(data.tasks);
-        setTaskId(data.tasks.length + 1);
+        setTaskId(data.lastTaskId + 1);
       });
-  }, [selectedIndex, open, checked]);
+  }, [selectedIndex, closedDialog, checked]);
 
-  function handleToggle(id) {
+  function handleDelete(id) {
     const request = {
       method: "DELETE",
       headers: {
@@ -115,7 +123,15 @@ export default function Tasks() {
           setChecked(false);
         }
       });
-  };
+  }
+
+  function handleEdit(task) {
+    setTask(task);
+    setTaskId(task.taskId);
+    setIsEditing(true);
+    setOpen(true);
+    console.log(task);
+  }
 
   return (
     <div className={classes.root}>
@@ -164,11 +180,11 @@ export default function Tasks() {
                   <ListItem
                     key={res.taskId}
                     button
-                    onClick={() => handleToggle(res.taskId)}
+                    onClick={() => handleDelete(res.taskId)}
                   >
                     <ListItemIcon>
                       <Checkbox
-                        color="inherit"
+                        color="primary"
                         edge="start"
                         tabIndex={-1}
                         disableRipple
@@ -178,10 +194,18 @@ export default function Tasks() {
                     <ListItemText id={labelId} primary={res.task} />
                     <ListItemSecondaryAction>
                       <Chip className={classes.chip} label={res.date} />
-                      <IconButton edge="end" aria-label="edit">
+                      <IconButton
+                        edge="end"
+                        aria-label="edit"
+                        onClick={() => handleEdit(res)}
+                      >
                         <EditIcon />
                       </IconButton>
-                      <IconButton edge="end" aria-label="delete">
+                      <IconButton
+                        onClick={() => handleDelete(res.taskId)}
+                        edge="end"
+                        aria-label="delete"
+                      >
                         <DeleteIcon />
                       </IconButton>
                     </ListItemSecondaryAction>
@@ -201,7 +225,13 @@ export default function Tasks() {
             </Fab>
           </Grid>
         </Grid>
-        <CustomDialog open={open} handleClose={handleClose} taskId={taskId} />
+        <CustomDialog
+          open={open}
+          handleClose={handleClose}
+          taskId={taskId}
+          isEditing={isEditing}
+          editingTask={task}
+        />
       </Container>
     </div>
   );

@@ -63,9 +63,13 @@ def get_tasks():
     try:
         filtered_tasks = []
         data = json.loads(request.data)
+        if (tasks != []):
+            last_task_id = tasks[-1]['taskId']
+        else:
+            last_task_id = 0
 
         if (data['index'] == 0):
-            return jsonify(statusCode=200, tasks=tasks)
+            return jsonify(statusCode=200, tasks=tasks, lastTaskId=last_task_id)
         else:
             date_now = date.today()
             delta = timedelta(weeks=1)
@@ -82,7 +86,7 @@ def get_tasks():
                 elif (data['index'] == 2 and task_date >= date_now and task_date <= date_then):
                     filtered_tasks.append(task)
 
-            return jsonify(statusCode=200, tasks=filtered_tasks)
+            return jsonify(statusCode=200, tasks=filtered_tasks, lastTaskId=last_task_id)
 
     except Exception as e:
         return jsonify(statusCode=500, message=str(e))
@@ -92,17 +96,33 @@ def get_tasks():
 def delete_task(id):
 
     try:
-        print(id)
         for task in tasks:
-
-            print(task['taskId'])
 
             if (int(task['taskId']) == int(id)):
                 value = task
-                print(value)
                 break
         
         tasks.remove(value)
+        return jsonify(statusCode=200, message='Tarefa removida com sucesso.')
+
+    except Exception as e:
+        return jsonify(statusCode=500, message=str(e))
+
+
+@app.route('/update', methods=['POST'])
+def update_task():
+
+    try:
+        data = json.loads(request.data)
+        index = 0
+
+        for task in tasks:
+
+            if (int(task['taskId']) == int(data['taskId'])):
+                break
+            
+            index += 1
+        tasks[index] = data
         return jsonify(statusCode=200, message='Tarefa removida com sucesso.')
 
     except Exception as e:

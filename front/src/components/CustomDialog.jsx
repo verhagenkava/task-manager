@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { withStyles, makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
@@ -71,7 +71,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function CustomizedDialogs({ open, handleClose, taskId }) {
+export default function CustomizedDialogs({
+  open,
+  handleClose,
+  taskId,
+  isEditing,
+  editingTask,
+}) {
   const classes = useStyles();
   const [task, setTask] = useState("");
   const [selectedDate, handleDateChange] = useState(new Date());
@@ -103,6 +109,48 @@ export default function CustomizedDialogs({ open, handleClose, taskId }) {
         handleClose();
       });
   }
+
+  function handleUpdateTask() {
+    const formatedDate = `${
+      selectedDate.getDate() +
+      "/" +
+      (selectedDate.getMonth() + 1) +
+      "/" +
+      selectedDate.getFullYear()
+    }`;
+    const request = {
+      method: "POST",
+      headers: {
+        content_type: "application/json",
+      },
+      body: JSON.stringify({
+        taskId: taskId,
+        task: task,
+        date: formatedDate,
+      }),
+    };
+    fetch("http://localhost:5000/update", request)
+      .then((response) => response.json())
+      .then((data) => {
+        setTask("");
+        handleDateChange(new Date());
+        handleClose();
+      });
+  }
+
+  useEffect(() => {
+    if (isEditing) {
+      setTask(editingTask.task);
+      const dateArray = editingTask.date.split("/");
+      handleDateChange(
+        new Date(
+          parseInt(dateArray[2]),
+          parseInt(dateArray[1]) - 1,
+          parseInt(dateArray[0]),
+        )
+      );
+    }
+  }, [isEditing]);
 
   return (
     <div>
@@ -140,7 +188,10 @@ export default function CustomizedDialogs({ open, handleClose, taskId }) {
           </MuiPickersUtilsProvider>
         </DialogContent>
         <DialogActions>
-          <Button className={classes.addButton} onClick={handleSaveTask}>
+          <Button
+            className={classes.addButton}
+            onClick={isEditing ? handleUpdateTask : handleSaveTask}
+          >
             Adicionar
           </Button>
           <Button onClick={handleClose}>Cancelar</Button>
