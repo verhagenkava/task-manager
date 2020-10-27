@@ -128,7 +128,6 @@ export default function Tasks() {
     fetch(`http://localhost:5000/task/${id}`, request)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
         if (checked === false) {
           setChecked(true);
         } else {
@@ -147,7 +146,6 @@ export default function Tasks() {
     setTaskId(task.taskId);
     setIsEditing(true);
     setOpen(true);
-    console.log(task);
   }
 
   return (

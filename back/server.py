@@ -30,14 +30,10 @@ def sign_up():
 @app.route('/login', methods=['POST'])
 def login():
 
-    print(users)
-
     try:
         data = json.loads(request.data)
-        print(data)
         if (users != []):
             for user in users:
-                print(user)
                 if (user['email'] == data['email']):
                     if (user['password'] == data['password']):
                         return jsonify(statusCode=200, message='Usuário identificado.')
