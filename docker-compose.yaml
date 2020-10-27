@@ -1,0 +1,32 @@
+version: '3'
+
+services: 
+    back:
+        build: 
+            context: ./back/
+            dockerfile: server.dockerfile
+        command: python server.py
+        volumes: 
+            - ./back/:/user/src/app/
+        expose: 
+            - 5000
+        ports: 
+            - 5000:5000
+        stdin_open: true
+
+    front:
+        build: 
+            context: ./front/
+            dockerfile: app.dockerfile
+        volumes: 
+            - './front/:/usr/src/app'
+            - 'usr/src/app/node_modules/'
+        expose: 
+            - 3000
+        ports: 
+            - '3000:3000'
+        environment: 
+            - NODE_ENV=development
+        links: 
+            - back
+        stdin_open: true
